@@ -1,7 +1,7 @@
 ---
 title: js事件循环
 date: 2023-2-20 10:53
-categories: 面试
+categories: JS
 ---
 
 # js事件循环
@@ -104,7 +104,7 @@ async function async2() {
 async function async3(){
     console.log('10');
 }
-console.log('4');
+console.log('4');              
 setTimeout(() => {
 	console.log('5');
 }, 0);

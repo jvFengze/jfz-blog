@@ -1,6 +1,6 @@
 ---
 title: Promise
-date: 2023-2-20 10:53
+date: 2023-2-28 18:23
 categories: JS
 ---
 
@@ -147,4 +147,85 @@ Promise.all可以将多个Promise实例包装成一个Promise实例。它可以�
 1. 只有数组里每个Promise的状态都编程了Fulfilled，Promise.all的状态才会变成Fulefilled，然后将每一个状态发返回的值，组装成一个数组返回给后面的回调函数
 2. 只要数组里面有一个Promise的状态是Rejected，Promise.all的状态就会变成Rejected。这个时候第一个被Rejected的实例的结果会传递给后面你的回调
 3. 如果作为参数的Promise实例自身定义了catch方法，那么他被Rejected时并不会被Promise.all的catch的方法给接受
+
+### Promise.all队列中异步的执行顺序
+
+```js
+function promise1 () {
+  return new Promise(resolve => {
+    console.log('promise1 start');
+    setTimeout(() => {
+      console.log('promise1 over');
+      resolve();
+    }, 100);
+  })
+}
+function promise2 () {
+  return new Promise(resolve => {
+    console.log('promise2 start');
+    setTimeout(() => {
+      console.log('promise2 over');
+      resolve();
+    }, 90);
+  })
+}
+
+Promise.all([promise1(), promise2()])
+// promise1 start
+// promise2 start
+// promise2 over
+// promise1 over
+```
+
+如果Promise.all中的方法是串行的，执行顺序应该是`promise1 start` -> `promise1 over` -> `promise2 start` -> `promise2 over`但实际上却是上面的结果，说明Promise.all的执行顺序应该是并行的。（其实说并行是有问题的）
+
+### 实现Promise.all
+
+```js
+function promiseAll(promises) {
+    return new Promise((resolve,reject) =>{
+        let count = 0;
+        let result = [];
+        if(!(promises instanceof Array)){
+            promises = Array.from(promises)
+        }
+        for(let i = 0; i < promises.length; i++){
+            if(!(promises[i] instanceof Promise)){
+                promises[i] = Promise.resolve(promises[i])
+            }
+            promises[i].then((value) =>{
+                count++;
+                result[i] = value;
+                if(count === promises.length){
+                    resolve(result)
+                }
+            }, (reason) =>{
+                reject(reason)
+            })
+        }
+    })
+}
+```
+
+## race
+
+Promise.race方法同样是将多个 Promise 实例，包装成一个新的 Promise 实例。
+
+只要传的值之中有一个实例率先改变状态，p的状态就跟着改变。那个率先改变的 Promise 实例的返回值，就传递给p的回调函数。
+
+### 实现promise.race
+
+```js
+function PromiseAll(arr){
+    return new Promise((resolve,reject)=>{
+        arr.forEach((item,i) => {
+            Promise.resolve(item).then(val=>{
+                resolve(val)
+            },err=>{
+                reject(err)
+            })
+        });
+    })
+}
+```
 

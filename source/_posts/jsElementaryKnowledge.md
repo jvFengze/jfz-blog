@@ -2,7 +2,7 @@
 
 ## 基本数据类型
 
-  JavaScript中一共有6种基本数据类型：
+  JavaScript中一共有7种基本数据类型：
 
 - 字符串型（String）
 
@@ -89,9 +89,11 @@ console.log(BigInt(0.2));
 
 3. Object.prototype.toString.call()
 
-   在判断数据类型时，我们称 Object.prototype.toString 为 “万能方法” “终极方法”，工作中也是比较常用而且准确。
+   在判断数据类型时， Object.prototype.toString在工作中也是比较常用而且准确。
    对于Object.prototype.toString() 方法，会返回一个形如 “[object XXX]” 的字符串
 
+   > 使用`const _toStr = Object.prototype.toString`是因为，toString实在是太容易被重写了。如果toString被其他人重写，将会对代码中涉及到的部分造成影响，所以就保存下来防止这种情况发生
+   
    ```js
    Object.prototype.toString.call('stjd')
    //"[object String]"
@@ -121,9 +123,10 @@ console.log(BigInt(0.2));
    // "[object RegExp]"
    ```
 
-   这种方法不能准确判断person是Person类的实例，而只能用instanceof 操作符来进行判断
-
+   > Object.prototype.toString.call(1) 和 Object.prototype.toString.call(new Number(1))时，返回的都是"[object Number]"，也就是说，它并不能区分原始类型和复杂类型.
+   
    ```js
+   //这种方法不能准确判断person是Person类的实例，而只能用instanceof 操作符来进行判断
    function Person(name, age) {
        this.name = name;
        this.age = age;
@@ -133,6 +136,5 @@ console.log(BigInt(0.2));
    //”[object Object]”
    console.log(person instanceof Person);//输出结果为true
    ```
-
    
 

@@ -1,5 +1,6 @@
 ---
 title: Promise
+index_img: ./img/promise1.webp
 date: 2023-2-28 18:23
 categories: JS
 ---

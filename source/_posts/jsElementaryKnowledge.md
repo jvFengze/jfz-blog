@@ -1,3 +1,12 @@
+---
+title: JS基础语法
+index_img: ./img/js.webp
+date: 2023-02-10 10:00:00
+categories: JS
+---
+
+
+
 # JS基础语法
 
 ## 基本数据类型

@@ -1,5 +1,6 @@
 ---
 title: js事件循环
+index_img: ./img/eventLoop.webp
 date: 2023-2-20 10:53
 categories: JS
 ---

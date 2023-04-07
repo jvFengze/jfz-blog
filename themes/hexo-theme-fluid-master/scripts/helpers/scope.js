@@ -18,8 +18,8 @@ const pageInScope = (page, scope) => {
     case 'tags':
     case 'tag':
       return page.layout === 'tags' || page.layout === 'tag';
-    case 'about':
-      return page.layout === 'about';
+    // case 'about':
+    //   return page.layout === 'about';
     case 'links':
     case 'link':
       return page.layout === 'links';

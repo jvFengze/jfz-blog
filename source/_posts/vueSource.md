@@ -1,7 +1,7 @@
 ---
 title: 响应式数据原理
 index_img: ./img/responsive.webp
-date: 2023-03-5 16:12:65
+date: 2023-03-5 16:12
 categories: VUE2.0源码
 ---
 

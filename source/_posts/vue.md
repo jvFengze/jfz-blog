@@ -1,7 +1,7 @@
 ---
 title: VUE2.x
 index_img: ./img/vue2.webp
-date: 2023-03-1 13:15:36
+date: 2023-03-1 13:15
 categories: VUE
 ---
 
@@ -406,4 +406,10 @@ vue计算属性是基于他们的依赖项的值结果进行缓存的，依赖�
 3. 使用 vue-cli 可以快速搭建Vue开发环境以及对应的webpack配置.
 
 VUE的安装详见官网[vue-cli](https://cli.vuejs.org/zh/guide/installation.html)
+
+vue-cli 2
+
 ![](../img/c7d733a40dfda396d40ee98d485a64ed.png)
+
+## VUE生命周期
+

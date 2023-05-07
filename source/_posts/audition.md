@@ -1,5 +1,5 @@
 ---
-title: 常见知识点整理|JS
+title: 知识点整理|JS
 index_img: ./img/jsAudition.jpg
 date: 2023-3-30 16:24
 categories: 面试

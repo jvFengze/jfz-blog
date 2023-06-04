@@ -78,7 +78,7 @@ categories: 面试
 
 # 4.事件循环
 
-见![js事件循环](https://koi85.club/2023/02/20/eventLoop/)
+见[js事件循环](https://koi85.club/2023/02/20/eventLoop/)
 
 # 5.js中数据在栈和堆中的存储方式
 

@@ -1,6 +1,6 @@
 ---
 title: JS高级语法
-index_img: ./img/JS.webp
+index_img: ./img/js.webp
 date: 2023-2-14 12:36
 categories: JS
 ---

@@ -308,7 +308,6 @@ watch:{
         console.log()
     }
 }
-
 ```
 
 - watchObject:监听对象 —— data中的属性（Number / String / Boolean / Array）
@@ -424,4 +423,148 @@ vue-cli 2
 生命周期钩子的 `this` 上下文指向调用它的 Vue 实例。
 
 > 不要在选项 property 或回调上使用箭头函数，比如 created: () => console.log(this.a) 或 vm.$watch('a', newValue => this.myMethod())。因为箭头函数并没有 this，this 会作为变量一直向上级词法作用域查找，直至找到为止，经常导致 Uncaught TypeError: Cannot read property of undefined 或 Uncaught TypeError: this.myMethod is not a function 之类的错误。
+
+## 组件
+
+组件是可复用的 Vue 实例，且带有一个名字
+
+### 组件化开发
+
+- 根据封装的思想，把页面上可重用的 UI 结构封装为组件，从而方便项目的开发和维护
+- vue 是一个支持组件化开发的前端框架, vue中的组件后缀名是 .vue
+
+### 组件的注册
+
+在注册一个组件的时候，我们始终需要给它一个名字。
+
+```js
+Vue.component('my-component-name', { /* ... */ })
+```
+
+该组件名就是 `Vue.component` 的第一个参数。
+
+你给予组件的名字可能依赖于你打算拿它来做什么。当直接在 DOM 中使用一个组件 (而不是在**字符串模板**或**单文件组件**) 的时候，推荐遵循 [W3C 规范](https://html.spec.whatwg.org/multipage/custom-elements.html#valid-custom-element-name)中的自定义组件名 (字母全小写且必须包含一个连字符)。这会帮助避免和当前以及未来的 HTML 元素相冲突。
+
+#### 全局注册
+
+到目前为止，我们只用过 `Vue.component` 来创建组件：
+
+```js
+Vue.component('my-component-name', {
+  // ... 选项 ...
+})
+```
+
+这些组件是**全局注册的**。也就是说它们在注册之后可以用在任何新创建的 Vue 根实例 (`new Vue`) 的模板中。
+
+#### 局部注册
+
+全局注册往往是不够理想的。比如，如果你使用一个像 webpack 这样的构建系统，全局注册所有的组件意味着即便你已经不再使用一个组件了，它仍然会被包含在你最终的构建结果中。这造成了用户下载的 JavaScript 的无谓的增加。
+
+在这些情况下，可以通过一个普通的 JavaScript 对象来定义组件：
+
+```js
+let ComponentA = { /* ... */ }
+```
+
+然后在 `components` 选项中定义你想要使用的组件
+
+```js
+new Vue({
+  el: '#app',
+  components: {
+    'component-a': ComponentA,
+  }
+})
+```
+
+> **局部注册的组件在其子组件中不可用**。
+
+如果你希望 `ComponentA` 在 `ComponentB` 中可用，则你需要这样写：
+
+```js
+let ComponentA = { /* ... */ }
+
+let ComponentB = {
+  components: {
+    'component-a': ComponentA
+  },
+  // ...
+}
+```
+
+### 模块系统
+
+使用诸如 Babel 和 webpack 的模块系统时，推荐创建一个 `components` 目录，并将每个组件放置在其各自的文件中。
+
+在局部注册之前导入每个你想使用的组件。例如，在一个假设的 `ComponentB.js` 或 `ComponentB.vue` 文件中：
+
+```js
+import ComponentA from './ComponentA'
+import ComponentC from './ComponentC'
+
+export default {
+  components: {
+    ComponentA,
+    ComponentC
+  },
+  // ...
+}
+```
+
+现在 `ComponentA` 和 `ComponentC` 都可以在 `ComponentB` 的模板中使用了。
+
+可能你的许多组件只是包裹了一个输入框或按钮之类的元素，是相对通用的。
+
+我们有时候会把它们称为**基础组件**，它们会在各个组件中被频繁的用到。
+
+如果使用了 webpack (或在内部使用了 webpack 的 [Vue CLI 3+](https://github.com/vuejs/vue-cli))，那么就可以使用 `require.context` 只全局注册这些非常通用的基础组件。
+
+应用入口文件 (`src/main.js`) 中全局导入基础组件的示例代码：
+
+```js
+import Vue from 'vue'
+import upperFirst from 'lodash/upperFirst'
+import camelCase from 'lodash/camelCase'
+
+const requireComponent = require.context(
+  // 其组件目录的相对路径
+  './components',
+  // 是否查询其子目录
+  false,
+  // 匹配基础组件文件名的正则表达式
+  /Base[A-Z]\w+\.(vue|js)$/
+)
+
+requireComponent.keys().forEach(fileName => {
+  // 获取组件配置
+  const componentConfig = requireComponent(fileName)
+
+  // 获取组件的 PascalCase 命名
+  const componentName = upperFirst(
+    camelCase(
+      // 获取和目录深度无关的文件名
+      fileName
+        .split('/')
+        .pop()
+        .replace(/\.\w+$/, '')
+    )
+  )
+
+  // 全局注册组件
+  Vue.component(
+    componentName,
+    // 如果这个组件选项是通过 `export default` 导出的，
+    // 那么就会优先使用 `.default`，
+    // 否则回退到使用模块的根。
+    componentConfig.default || componentConfig
+  )
+})
+```
+
+> **全局注册的行为必须在根 Vue 实例 (通过 `new Vue`) 创建之前发生**
+
+### 向子组件传递数据
+
+prop是可以在组件上注册的一些自定义属性。当一个值传递给一个prop属性的时候，它就变成了那哥组件实例的一个property。
 

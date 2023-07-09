@@ -1,6 +1,6 @@
 ---
-title: 响应式数据原理
-index_img: ./img/responsive.webp
+title: Vue2.0响应式数据原理
+index_img: ./img/u=1036577894,2860442903&fm=253&fmt=auto&app=120&f=JPEG.webp
 date: 2023-03-5 16:12
 categories: VUE2.0源码
 ---

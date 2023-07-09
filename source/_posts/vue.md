@@ -424,7 +424,7 @@ vue-cli 2
 
 > 不要在选项 property 或回调上使用箭头函数，比如 created: () => console.log(this.a) 或 vm.$watch('a', newValue => this.myMethod())。因为箭头函数并没有 this，this 会作为变量一直向上级词法作用域查找，直至找到为止，经常导致 Uncaught TypeError: Cannot read property of undefined 或 Uncaught TypeError: this.myMethod is not a function 之类的错误。
 
-## 组件
+# 组件
 
 组件是可复用的 Vue 实例，且带有一个名字
 
@@ -566,5 +566,86 @@ requireComponent.keys().forEach(fileName => {
 
 ### 向子组件传递数据
 
-prop是可以在组件上注册的一些自定义属性。当一个值传递给一个prop属性的时候，它就变成了那哥组件实例的一个property。
+prop是可以在组件上注册的一些自定义属性。当一个值传递给一个prop属性的时候，它就变成了那个组件实例的一个property。
 
+> HTML 中的 attribute 名是大小写不敏感的，所以浏览器会把所有大写字符解释为小写字符。这意味着当你使用 DOM 中的模板时，camelCase (驼峰命名法) 的 prop 名需要使用其等价的 kebab-case (短横线分隔命名) 命名，如果使用字符串模板，那么这个限制就不存在了
+
+#### prop类型
+
+```js
+props: ['title', 'likes', 'isPublished', 'commentIds', 'author']
+```
+
+当希望每个 prop 都有指定的值类型。这时，可以以对象形式列出 prop，这些 property 的名称和值分别是 prop 各自的名称和类型：
+
+```js
+props: {
+  title: String,
+  likes: Number,
+  isPublished: Boolean,
+  commentIds: Array,
+  author: Object,
+  callback: Function,
+  contactsPromise: Promise // or any other constructor
+}
+```
+
+#### prop单向数据流
+
+所有的 prop 都使得其父子 prop 之间形成了一个**单向下行绑定**：父级 prop 的更新会向下流动到子组件中，但是反过来则不行。这样会防止从子组件意外变更父级组件的状态
+
+每次父级组件发生变更时，子组件中所有的 prop 都将会刷新为最新的值。但不应该在一个子组件内部改变 prop。如果这样做了，会直接报错。修改 props 的值,可以把 props 的值转存到data中(data 中的数据都是可读可写)或使用该值来定义一个计算属性。
+
+#### prop验证
+
+可以为组件的 prop 指定验证要求，例如你知道的这些类型。如果有一个需求没有被满足，则 Vue 会在浏览器控制台中警告你。
+
+```js
+Vue.component('my-component', {
+  props: {
+    // 基础的类型检查 (`null` 和 `undefined` 会通过任何类型验证)
+    propA: Number,
+    // 多个可能的类型
+    propB: [String, Number],
+    // 必填的字符串
+    propC: {
+      type: String,
+      required: true
+    },
+    // 带有默认值的数字
+    propD: {
+      type: Number,
+      default: 100
+    },
+    // 带有默认值的对象
+    propE: {
+      type: Object,
+      // 对象或数组默认值必须从一个工厂函数获取
+      default: function () {
+        return { message: 'hello' }
+      }
+    },
+    // 自定义验证函数
+    propF: {
+      validator: function (value) {
+        // 这个值必须匹配下列字符串中的一个
+        return ['success', 'warning', 'danger'].indexOf(value) !== -1
+      }
+    }
+  }
+})
+```
+
+> prop 会在一个组件实例创建**之前**进行验证，所以实例的 property (如 `data`、`computed` 等) 在 `default` 或 `validator` 函数中是不可用的。
+
+## 监听子组件的事件
+
+### 子组件触发父组件事件
+
+![](../img/父子组件传值.png)
+
+> 不同于组件和 prop，事件名不存在任何自动化的大小写转换。
+>
+> 而是触发的事件名需要完全匹配监听这个事件所用的名称。
+>
+> 并且 `v-on` 事件监听器在 DOM 模板中会被自动转换为全小写 (因为 HTML 是大小写不敏感的)，所以 `v-on:myEvent` 将会变成 `v-on:myevent`，导致 `myEvent` 不可能被监听到。

@@ -133,9 +133,7 @@ eg：(在这里参数是监听的事件名)
 
 - 原生DOM对象onclick,oninput,onkeyup等原生事件,替换为@click,@input,@keyup
 
-  **事件对象$event**
-
-  vue 提供的特殊变量,表原生的事件参数对象event, 在DOM事件的[回调函数](https://so.csdn.net/so/search?q=回调函数&spm=1001.2101.3001.7020)中传入参数`$event`，可以获取到该事件的事件对象
+  **事件对象$event**vue 提供的特殊变量,表原生的事件参数对象event, 在DOM事件的[回调函数](https://so.csdn.net/so/search?q=回调函数&spm=1001.2101.3001.7020)中传入参数`$event`，可以获取到该事件的事件对象
 
   可解决事件参数对象event被覆盖的问题，如果默认的事件对象e被覆盖了，则可以手动传递一个$event
 

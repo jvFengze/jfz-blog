@@ -1,3 +1,10 @@
+---
+title: SVG
+index_img: ./img/SSL.webp
+date: 2023-3-20 16:49
+categories: 计网
+---
+
 # 什么是svg
 
 - SVG是 Scalable Vector Graphics 的缩写 意为可缩放矢量图形
